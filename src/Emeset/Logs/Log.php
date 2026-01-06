@@ -25,6 +25,8 @@ class Log{
     private $monolog;
     /** @var bool|null Cached Monolog availability flag to avoid repeated checks */
     private static ?bool $cachedMonolog = null;
+    /** @var string|null Cached project root path to avoid repeated detection */
+    private static ?string $cachedProjectRoot = null;
     /** @var string Directory path where log files will be stored */
     private string $logDir;
 
@@ -191,6 +193,10 @@ class Log{
      * @return string The absolute path to the project root, or getcwd() as fallback
      */
     private function detectProjectRoot(): string {
+        if (self::$cachedProjectRoot !== null) {
+            return self::$cachedProjectRoot;
+        }
+
         $path = __DIR__;
         
         // First, skip out of vendor directory if we're inside one
@@ -205,7 +211,8 @@ class Log{
         // Now search for composer.json starting from project root
         for ($i = 0; $i < 15; $i++) {
             if (file_exists($path . DIRECTORY_SEPARATOR . 'composer.json')) {
-                return $path;
+                self::$cachedProjectRoot = $path;
+                return self::$cachedProjectRoot;
             }
             $parent = dirname($path);
             if ($parent === $path) {
@@ -213,7 +220,8 @@ class Log{
             }
             $path = $parent;
         }
-        return getcwd();
+        self::$cachedProjectRoot = getcwd();
+        return self::$cachedProjectRoot;
     }
 
     /**
