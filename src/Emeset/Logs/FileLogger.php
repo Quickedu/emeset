@@ -40,7 +40,6 @@ class FileLogger
         $timestamp = date('Y-m-d H:i:s');
         $logEntry = $timestamp . " | - | " . $context . " | - | " . $this->user . " | - | " . $level . " | - | " . $message . "\n";
         file_put_contents($this->logFile, $logEntry, FILE_APPEND);
-        print_r("Log written to file: " . $this->logFile . "\n");
     }
     /**
      * Sets up Log folder and creates daily log file if not exists
@@ -76,7 +75,6 @@ class FileLogger
         if ($level != 'info' && $level != 'notice' && $level != 'warning' && $level != 'error' && $level != 'critical' && $level != 'alert' && $level != 'emergency'){
             $level = 'info';
         }
-        print_r("Logging with level: " . $level . "\n");
         $this->write($context, $message, $level);
     }
 }

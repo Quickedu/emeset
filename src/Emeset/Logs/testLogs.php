@@ -4,6 +4,9 @@
  *
  * @author Eduard Martínez eduard.martinez.teixidor@gmail.com
  *
+ * WARNING: This file must be placed in the public directory where index.php is located,
+ * as it requires access to the Container and application configuration.
+ *
  * This script demonstrates how to use the logging service of the Emeset framework.
  * The Log service allows recording messages to the database or files, both with and without the Monolog library.
  *
@@ -45,6 +48,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // UNCOMMENT THIS if you don't have a database connection.
 // $db = null;
+
+// COMMENT THIS if you don't have a database connection or if it's not at the specified path.
+// If you have a diferent path to get to config.php, please change it accordingly.
+$db = (new \App\Container(__DIR__ . "/../App/config.php"))->get('Db')->getDb();
 
 // Test 1: Log with Monolog and database
 $logMonolog = new \Emeset\Logs\Log($db, true);
